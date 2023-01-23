@@ -5,7 +5,7 @@ const entrieRouter = Router()
 
 
 entrieRouter.post("/novaentrada", addEntrie)
-entrieRouter.get("/novaentrada", listEntries)
+entrieRouter.get("/home", listEntries)
 
 entrieRouter.post("/novasaida", addExit)
 

@@ -31,9 +31,9 @@ export async function signIn(req, res) {
   try {
 
     const checkUser = await db.collection('usuarios').findOne({ email })
-
+    
     if (!checkUser) return res.status(401).send("Usuário e/ou senha incorretos")
-
+    
     const isCorrectPassword = bcrypt.compareSync(password, checkUser.password)
 
     if (!isCorrectPassword) return res.status(401).send("Usuário e/ou senha incorretos")
@@ -42,7 +42,7 @@ export async function signIn(req, res) {
 
     await db.collection("sessoes").insertOne({ idUsuario: checkUser._id, token })
 
-    return res.status(200).send(token)
+    return res.status(200).send({token: token, id: checkUser._id, name: checkUser.name})
 
   } catch (error) {
     res.status(500).send(error.message)
