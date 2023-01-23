@@ -21,7 +21,6 @@ export async function addEntrie(req, res){
     const token = authorization?.replace("Bearer ", '')
     if (!token) {return res.status(422).send("Informe o token!")}
     const {value, description, exit, id} = req.body
-    console.log(id)
     const date = Date.now()
     const timestamp = dayjs(date).format("DD/MM")
     let realValue, revValue = value;
@@ -71,7 +70,6 @@ export async function addExit(req, res){
     const token = authorization?.replace("Bearer ", '')
     if (!token) {return res.status(422).send("Informe o token!")}
     const {value, description, exit, id} = req.body
-    console.log(id)
     const date = Date.now()
     const timestamp = dayjs(date).format("DD/MM")
     let realValue, revValue = value;
