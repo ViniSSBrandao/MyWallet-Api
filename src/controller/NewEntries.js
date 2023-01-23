@@ -21,11 +21,20 @@ export async function addEntrie(req, res){
     const { authorization } = req.headers
     const token = authorization?.replace("Bearer ", '')
     if (!token) return res.status(422).send("Informe o token!")
-    const {value, description} = req.body
+    const {value, description, exit} = req.body
     const date = Date.now()
     const timestamp = dayjs(date).format("DD/MM")
+    let realValue
 
-    const validation = entrieSchema.validate(entrie, { pick: ["value", "description"], abortEarly: false })
+    if(exit===false){
+        console.log("menos") 
+        realValue = -value } 
+    else{
+        console.log("mais")
+        realValue=value
+    }
+
+    const validation = entrieSchema.validate(entrie, { pick: ["value", "description", "exit"], abortEarly: false })
     
     if(validation.error){
         const errors = validation.error.details.map((err) => {
@@ -40,7 +49,7 @@ export async function addEntrie(req, res){
         if (!checkSession) return res.status(401).send("Usuário não está logado. Faça o login e tente novamente.")
 
         
-        await db.collection("entries").insertOne({ user: token, value: value, description: description, date: timestamp  })
+        await db.collection("entries").insertOne({ user: token, value: realValue, description: description, date: timestamp  })
         res.sendStatus(200)
         
       } catch (error) {
