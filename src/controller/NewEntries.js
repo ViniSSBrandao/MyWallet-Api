@@ -67,28 +67,37 @@ export async function addEntrie(req, res){
 
 export async function addExit(req, res){
     const entrie = req.body;
-    const { authorization } = req.headers
+    const { authorization} = req.headers
     const token = authorization?.replace("Bearer ", '')
-    if (!token) return res.status(422).send("Informe o token!")
-    const {value, description, exit} = req.body
+    if (!token) {return res.status(422).send("Informe o token!")}
+    const {value, description, exit, id} = req.body
+    console.log(id)
     const date = Date.now()
     const timestamp = dayjs(date).format("DD/MM")
-    let realValue
-
-    if(exit===false){
-         
-        realValue = -value } 
-    else{
-        return res.status(422).send("Você deve enviar um valor de saida")
-        realValue=value
+    let realValue, revValue = value;
+    
+    const validation = entrieSchema.validate(entrie, { pick: ["value", "description", "exit", "id"], abortEarly: false })
+    
+    if(typeof value != "number"){
+        revValue = parseFloat(revValue)
     }
 
-    const validation = entrieSchema.validate(entrie, { pick: ["value", "description", "exit"], abortEarly: false })
-    
+    if(exit===false){     
+        realValue = -revValue 
+        
+    } 
+    else{
+        
+        return res.status(422).send("Você deve enviar um valor de saida")
+        realValue=revValue
+    }
+
+
     if(validation.error){
         const errors = validation.error.details.map((err) => {
             return err.message
           })
+          console.log(errors)
           return res.status(422).send(errors)
     }
 
@@ -98,7 +107,7 @@ export async function addExit(req, res){
         if (!checkSession) return res.status(401).send("Usuário não está logado. Faça o login e tente novamente.")
 
         
-        await db.collection("entries").insertOne({ user: token, value: realValue, description: description, date: timestamp  })
+        await db.collection("entries").insertOne({ id: id, user: token, value: realValue, description: description, date: timestamp  })
         res.sendStatus(200)
         
       } catch (error) {
