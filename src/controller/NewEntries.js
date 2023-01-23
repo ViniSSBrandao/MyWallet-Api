@@ -1,4 +1,5 @@
 import db from "../config/database.js";
+import dayjs from "dayjs";
 import { entrieSchema } from "../model/EntrieSchema.js";
 
 
@@ -21,7 +22,9 @@ export async function addEntrie(req, res){
     const token = authorization?.replace("Bearer ", '')
     if (!token) return res.status(422).send("Informe o token!")
     const {value, description} = req.body
-    
+    const date = Date.now()
+    const timestamp = dayjs(date).format("DD/MM")
+
     const validation = entrieSchema.validate(entrie, { pick: ["value", "description"], abortEarly: false })
     
     if(validation.error){
@@ -36,12 +39,13 @@ export async function addEntrie(req, res){
 
         if (!checkSession) return res.status(401).send("Usuário não está logado. Faça o login e tente novamente.")
 
-        console.log(token,value,description)
-        await db.collection("entries").insertOne({ user: token, value: value, description: description  })
+        
+        await db.collection("entries").insertOne({ user: token, value: value, description: description, date: timestamp  })
         res.sendStatus(200)
         
       } catch (error) {
         res.status(500).send(error.message)
       }
 }
+
 
