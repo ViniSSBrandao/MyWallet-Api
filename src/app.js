@@ -10,4 +10,4 @@ app.use(cors())
 app.use([authRouter, entrieRouter])
 
 const PORT = 5000;
-app.listen(PORT, ()=>{console.log("Listening on 5000")})
+app.listen(PORT, ()=>{console.log(`Listening on ${PORT}`)})

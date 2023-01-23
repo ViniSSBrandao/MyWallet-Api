@@ -32,11 +32,11 @@ export async function signIn(req, res) {
 
     const checkUser = await db.collection('usuarios').findOne({ email })
 
-    if (!checkUser) return res.status(401).send("Usuário ou senha incorretos")
+    if (!checkUser) return res.status(401).send("Usuário e/ou senha incorretos")
 
     const isCorrectPassword = bcrypt.compareSync(password, checkUser.password)
 
-    if (!isCorrectPassword) return res.status(401).send("Usuário ou senha incorretos")
+    if (!isCorrectPassword) return res.status(401).send("Usuário e/ou senha incorretos")
 
     const token = uuidV4();
 
