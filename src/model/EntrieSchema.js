@@ -1,8 +1,6 @@
 import joi from 'joi'
 
 export const entrieSchema = joi.object({
-  name: joi.string().required(),
-  email: joi.string().email().required(),
-  password: joi.string().required(),
-  confirmPassword: joi.string().valid(joi.ref('password')).required()
-});
+  value: joi.number().required(),
+  description: joi.string().required(),
+  });
